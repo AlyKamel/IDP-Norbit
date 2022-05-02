@@ -112,6 +112,13 @@ nlu:
     - [300](tv_price)
     - I want a [140](tv_price) television
 
+- intent: restart
+  examples: |
+    - restart
+    - reset
+    - start again
+    - cancel
+
 - regex: tv_price
   examples: |
     - \d{2,3}

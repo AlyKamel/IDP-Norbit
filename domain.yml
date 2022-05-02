@@ -10,6 +10,7 @@ intents:
   - bot_challenge
   - order_tv
   - inform
+  - restart
 
 responses:
   utter_greet:
@@ -42,6 +43,9 @@ responses:
 
   utter_order_tv_info:
   - text: "Looking for a TV of price {tv_price}..."
+
+  utter_restart:
+  - text: "Ok. Chat history has been reset."
 
 entities:
 - tv_price

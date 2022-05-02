@@ -33,3 +33,7 @@ rules:
     - requested_slot: null
   - action: utter_order_tv_info
 
+- rule: Reset history
+  steps:
+  - intent: restart
+  - action: action_restart
