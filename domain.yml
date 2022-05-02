@@ -8,6 +8,8 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - order_tv
+  - inform
 
 responses:
   utter_greet:
@@ -31,6 +33,31 @@ responses:
 
   utter_please_rephrase:
   - text: I'm sorry, I didn't quite understand that. Could you rephrase?
+
+  utter_confirm_tv:
+  - text: "Ok, a TV"
+
+  utter_ask_order_tv_form_tv_price:
+  - text: "What price?"
+
+  utter_order_tv_info:
+  - text: "Looking for a TV of price {tv_price}..."
+
+entities:
+- tv_price
+
+slots:
+  tv_price:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: tv_price
+      # conditions:
+      # - active_loop: order_tv_form
+forms:
+  order_tv_form:
+    required_slots:
+        - tv_price
 
 session_config:
   session_expiration_time: 60

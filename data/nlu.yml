@@ -89,3 +89,29 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: order_tv
+  examples: |
+    - I would like to order a TV
+    - I want to buy a television
+    - Can you help me find a television?
+    - I am searching for a TV screen
+    - I'm looking for a tv.
+    - I'd like a [350](tv_price) television
+    - I want to order a [60](tv_price) television
+    - want a [120](tv_price) television
+    - I want a [140](tv_price) television
+    - looking for a [150](tv_price) tv
+
+- intent: inform
+  examples: |
+    - I'd like a [350](tv_price) television
+    - I want to order a [60](tv_price) television
+    - [140](tv_price)
+    - want a [120](tv_price) television
+    - [300](tv_price)
+    - I want a [140](tv_price) television
+
+- regex: tv_price
+  examples: |
+    - \d{2,3}
