@@ -111,6 +111,10 @@ nlu:
     - want a [120](tv_price) television
     - [300](tv_price)
     - I want a [140](tv_price) television
+    - [Samsung](tv_brand)
+    - [sony](tv_brand) brand
+    - [lg](tv_brand)
+    - I want a [Panasonic](tv_brand) one
 
 - intent: restart
   examples: |
@@ -122,3 +126,13 @@ nlu:
 - regex: tv_price
   examples: |
     - \d{2,3}
+
+- lookup: tv_brand
+  examples: |
+    - Samsung
+    - Sony
+    - LG Electronics
+    - Panasonic
+    - Vizio
+    - Sharp
+    - Toshiba

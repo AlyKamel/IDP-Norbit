@@ -38,17 +38,21 @@ responses:
   utter_confirm_tv:
   - text: "Ok, a TV"
 
+  utter_ask_order_tv_form_tv_brand:
+  - text: "What brand?"
+
   utter_ask_order_tv_form_tv_price:
   - text: "What price?"
 
   utter_order_tv_info:
-  - text: "Looking for a TV of price {tv_price}..."
+  - text: "Looking for a {tv_brand} TV of price {tv_price}..."
 
   utter_restart:
   - text: "Ok. Chat history has been reset."
 
 entities:
 - tv_price
+- tv_brand
 
 slots:
   tv_price:
@@ -56,12 +60,19 @@ slots:
     mappings:
     - type: from_entity
       entity: tv_price
+
+  tv_brand:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: tv_brand
       # conditions:
       # - active_loop: order_tv_form
 forms:
   order_tv_form:
     required_slots:
         - tv_price
+        - tv_brand
 
 session_config:
   session_expiration_time: 60
