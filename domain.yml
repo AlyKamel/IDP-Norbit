@@ -1,79 +1,71 @@
-version: "3.1"
-
+version: '3.1'
 intents:
-  - greet
-  - goodbye
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
-  - order_tv
-  - inform
-  - restart
-
+- affirm
+- bot_challenge
+- deny
+- goodbye
+- greet
+- inform
+- mood_great
+- mood_unhappy
+- order_tv
+- restart
+- stop
 responses:
+  utter_ask_continue:
+  - text: Are you sure you want to cancel filling the form?
   utter_greet:
-  - text: "Hey! How are you?"
-
+  - text: Hey! How are you?
   utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
-
+  - text: 'Here is something to cheer you up:'
+    image: https://i.imgur.com/nGF1K8f.jpg
   utter_did_that_help:
-  - text: "Did that help you?"
-
+  - text: Did that help you?
   utter_happy:
-  - text: "Great, carry on!"
-
+  - text: Great, carry on!
   utter_goodbye:
-  - text: "Bye"
-
+  - text: Bye
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
-
+  - text: I am a bot, powered by Rasa.
   utter_please_rephrase:
   - text: I'm sorry, I didn't quite understand that. Could you rephrase?
-
   utter_confirm_tv:
-  - text: "Ok, a TV"
-
+  - text: Ok, a TV
   utter_ask_order_tv_form_tv_brand:
-  - text: "What brand?"
-
+  - text: What brand?
   utter_ask_order_tv_form_tv_price:
-  - text: "What price?"
-
+  - text: What price?
   utter_order_tv_info:
-  - text: "Looking for a {tv_brand} TV of price {tv_price}..."
-
+  - text: Looking for a {tv_brand} TV of price {tv_price}...
   utter_restart:
-  - text: "Ok. Chat history has been reset."
-
+  - text: Ok. Chat history has been reset.
+  utter_end_form:
+  - text: Ended the form. What else could I assist you with?
 entities:
 - tv_price
 - tv_brand
-
 slots:
   tv_price:
     type: text
     mappings:
     - type: from_entity
       entity: tv_price
-
   tv_brand:
     type: text
     mappings:
     - type: from_entity
       entity: tv_brand
-      # conditions:
-      # - active_loop: order_tv_form
 forms:
   order_tv_form:
     required_slots:
-        - tv_price
-        - tv_brand
-
+    - tv_price
+    - tv_brand
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
+actions:
+- utter_ask_continue
+- utter_end_form
+- utter_goodbye
+- utter_greet
+- utter_please_rephrase

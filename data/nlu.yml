@@ -1,5 +1,4 @@
 version: "3.1"
-
 nlu:
 - intent: greet
   examples: |
@@ -16,7 +15,6 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
-
 - intent: goodbye
   examples: |
     - cu
@@ -29,7 +27,6 @@ nlu:
     - see you around
     - bye bye
     - see you later
-
 - intent: affirm
   examples: |
     - yes
@@ -38,7 +35,7 @@ nlu:
     - of course
     - that sounds good
     - correct
-
+    - yes stop
 - intent: deny
   examples: |
     - no
@@ -48,7 +45,6 @@ nlu:
     - don't like that
     - no way
     - not really
-
 - intent: mood_great
   examples: |
     - perfect
@@ -65,7 +61,6 @@ nlu:
     - so so perfect
     - so good
     - so perfect
-
 - intent: mood_unhappy
   examples: |
     - my day was horrible
@@ -82,14 +77,12 @@ nlu:
     - extremly sad
     - so saad
     - so sad
-
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
-
 - intent: order_tv
   examples: |
     - I would like to order a TV
@@ -102,7 +95,8 @@ nlu:
     - want a [120](tv_price) television
     - I want a [140](tv_price) television
     - looking for a [150](tv_price) tv
-
+    - i want to order a television today
+    - tv please
 - intent: inform
   examples: |
     - I'd like a [350](tv_price) television
@@ -112,27 +106,23 @@ nlu:
     - [300](tv_price)
     - I want a [140](tv_price) television
     - [Samsung](tv_brand)
-    - [sony](tv_brand) brand
-    - [lg](tv_brand)
     - I want a [Panasonic](tv_brand) one
-
+    - Searching for a [LG](tv_brand) tv
+    - [Sony](tv_brand) please
+    - [400](tv_price) dollars
+    - [400](tv_price)
 - intent: restart
   examples: |
     - restart
     - reset
     - start again
     - cancel
-
+- intent: stop
+  examples: |
+    - stop
+    - cancel
 - regex: tv_price
   examples: |
     - \d{2,3}
-
 - lookup: tv_brand
-  examples: |
-    - Samsung
-    - Sony
-    - LG Electronics
-    - Panasonic
-    - Vizio
-    - Sharp
-    - Toshiba
+   data/tv_brands.txt
