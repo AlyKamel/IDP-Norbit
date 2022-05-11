@@ -69,3 +69,5 @@ actions:
 - utter_goodbye
 - utter_greet
 - utter_please_rephrase
+- action_hello_world
+- action_find_product

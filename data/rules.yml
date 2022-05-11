@@ -32,6 +32,7 @@ rules:
   - slot_was_set:
     - requested_slot: null
   - action: utter_order_tv_info
+  - action: action_find_product
 
 - rule: Reset history
   steps:
