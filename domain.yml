@@ -6,8 +6,6 @@ intents:
 - goodbye
 - greet
 - inform
-- mood_great
-- mood_unhappy
 - order_tv
 - restart
 - stop
@@ -15,14 +13,11 @@ responses:
   utter_ask_continue:
   - text: Are you sure you want to cancel filling the form?
   utter_greet:
-  - text: Hey! How are you?
-  utter_cheer_up:
-  - text: 'Here is something to cheer you up:'
-    image: https://i.imgur.com/nGF1K8f.jpg
+  - text: Hey!
+  - text: Hello!
+  - text: Hi!
   utter_did_that_help:
   - text: Did that help you?
-  utter_happy:
-  - text: Great, carry on!
   utter_goodbye:
   - text: Bye
   utter_iamabot:
