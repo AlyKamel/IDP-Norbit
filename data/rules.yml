@@ -31,8 +31,17 @@ rules:
   - active_loop: null
   - slot_was_set:
     - requested_slot: null
-  - action: utter_order_tv_info
+  - action: action_order_summary
   - action: action_find_product
+
+- rule: Skip form slot
+  condition:
+  - active_loop: order_tv_form
+  steps:
+  - intent: skip
+  - action: utter_skip_slot
+  - action: order_tv_form
+  - active_loop: order_tv_form
 
 - rule: Reset history
   steps:

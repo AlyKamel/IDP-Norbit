@@ -9,6 +9,7 @@ intents:
 - order_tv
 - restart
 - stop
+- skip
 responses:
   utter_ask_continue:
   - text: Are you sure you want to cancel filling the form?
@@ -24,14 +25,18 @@ responses:
   - text: I am a bot, powered by Rasa.
   utter_please_rephrase:
   - text: I'm sorry, I didn't quite understand that. Could you rephrase?
+  utter_default:
+  - text: I'm sorry, I didn't quite understand that. Could you rephrase?
   utter_confirm_tv:
   - text: Ok, a TV
   utter_ask_order_tv_form_tv_brand:
   - text: What brand?
   utter_ask_order_tv_form_tv_price:
   - text: What price?
-  utter_order_tv_info:
-  - text: Looking for a {tv_brand} TV of price {tv_price}...
+  utter_skip_slot:
+  - text: Ok. Will skip this question.
+  # utter_order_tv_info:
+  # - text: Looking for a {tv_brand} TV of price {tv_price}...
   utter_restart:
   - text: Ok. Chat history has been reset.
   utter_end_form:
@@ -66,3 +71,5 @@ actions:
 - utter_please_rephrase
 - action_hello_world
 - action_find_product
+- action_order_summary
+- validate_order_tv_form

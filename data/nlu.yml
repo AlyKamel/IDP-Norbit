@@ -89,6 +89,16 @@ nlu:
   examples: |
     - stop
     - cancel
+- intent: skip
+  examples: |
+    - skip
+    - i dont care
+    - whatever
+    - no preference
+    - does not matter to me
+    - anything is fine
+    - next
+    - skip this question
 - regex: tv_price
   examples: |
     - \d{2,3}
