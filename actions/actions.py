@@ -14,6 +14,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.events import SlotSet
 
+from thefuzz import process
+
 import json
 
 
@@ -62,6 +64,7 @@ class FindProductAction(Action):
 
 skippedSlots = set()
 
+
 class SummarizeOrderAction(Action):
     def name(self) -> Text:
         return "action_order_summary"
@@ -81,26 +84,44 @@ class SummarizeOrderAction(Action):
         skippedSlots.clear()
         return []
 
+
 class ValidateOrderTvForm(FormValidationAction):
 
-  def name(self) -> Text:
-      return "validate_order_tv_form"
+    def name(self) -> Text:
+        return "validate_order_tv_form"
 
-  async def required_slots(
-      self,
-      domain_slots: List[Text],
-      dispatcher: CollectingDispatcher,
-      tracker: Tracker,
-      domain: DomainDict
-  ) -> List[Text]:
+    @staticmethod
+    def tv_brand_db() -> List[Text]:
+        return ["Samsung", "Sony", "LG Electronics", "Panasonic", "Vizio", "Sharp", "Toshiba", "LG"]
 
-    updated_slots = set(domain_slots)
+    def validate_tv_brand(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
 
-    if tracker.get_intent_of_latest_message() == "skip":
-      slot = tracker.get_slot("requested_slot")
-      skippedSlots.add(slot)
+        ext_val, score = process.extractOne(slot_value, self.tv_brand_db())
+        if score >= 80:
+            return {"tv_brand": ext_val}
+        else:
+            return {"tv_brand": None}
 
-    updated_slots -= skippedSlots
-    print(updated_slots, skippedSlots)
+    async def required_slots(
+        self,
+        domain_slots: List[Text],
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict
+    ) -> List[Text]:
 
-    return list(updated_slots)
+        updated_slots = set(domain_slots)
+
+        if tracker.get_intent_of_latest_message() == "skip":
+            slot = tracker.get_slot("requested_slot")
+            skippedSlots.add(slot)
+
+        updated_slots -= skippedSlots
+
+        return list(updated_slots)

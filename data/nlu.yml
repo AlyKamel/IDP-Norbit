@@ -76,7 +76,7 @@ nlu:
     - [Samsung](tv_brand)
     - I want a [Panasonic](tv_brand) one
     - Searching for a [LG](tv_brand) tv
-    - [Sony](tv_brand) please
+    - [Sony](tv_brand) brand please
     - [400](tv_price) dollars
     - [400](tv_price)
 - intent: restart
@@ -102,5 +102,3 @@ nlu:
 - regex: tv_price
   examples: |
     - \d{2,3}
-- lookup: tv_brand
-   data/tv_brands.txt
