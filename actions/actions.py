@@ -46,7 +46,12 @@ class FindProductAction(Action):
             item_text = ""
             for i in items:
                 if (brand is None or i["brand"].casefold() == brand.casefold()) and (price is None or float(i["price"]) <= float(price)):
-                    item_text += i["name"] + ", "
+                    if item_text != "":
+                        item_text += ", "
+                    if tracker.get_latest_input_channel() == "slack":
+                        item_text += f"<{i['link']}|{i['name']}>"
+                    else:
+                        item_text += i['name']
             if item_text != "":
                 dispatcher.utter_message(
                     "I can recommend following TVs: " + item_text)

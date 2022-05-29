@@ -23,6 +23,7 @@ responses:
   - text: Bye
   utter_iamabot:
   - text: I am a bot, powered by Rasa.
+    image: "https://st3.depositphotos.com/8950810/17657/v/380/depositphotos_176577870-stock-illustration-cute-smiling-funny-robot-chat.jpg?forcejpeg=true"
   utter_please_rephrase:
   - text: I'm sorry, I didn't quite understand that. Could you rephrase?
   utter_default:
@@ -32,6 +33,27 @@ responses:
   utter_ask_order_tv_form_tv_brand:
   - text: What brand?
   utter_ask_order_tv_form_tv_price:
+  - custom: 
+      blocks:
+      - type: section
+        text:
+          text: "Choose the price range:"
+          type: plain_text
+        accessory:
+          type: static_select
+          placeholder:
+            type: plain_text
+            text: "Select price range:"
+          options:
+            - value: "500$"
+              text:
+                text: "up to 500$"
+                type: plain_text
+            - value: "1000$"
+              text:
+                text: "up to 1000$"
+                type: plain_text
+    channel: "slack"
   - text: What price?
   utter_skip_slot:
   - text: Ok. Will skip this question.
