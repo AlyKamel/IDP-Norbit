@@ -43,6 +43,16 @@ rules:
   - action: order_tv_form
   - active_loop: order_tv_form
 
+- rule: Stop form
+  condition:
+  - active_loop: order_tv_form
+  steps:
+  - intent: stop
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_end_form
+
 - rule: Reset history
   steps:
   - intent: restart

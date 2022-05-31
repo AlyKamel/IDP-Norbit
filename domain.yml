@@ -11,8 +11,6 @@ intents:
 - stop
 - skip
 responses:
-  utter_ask_continue:
-  - text: Are you sure you want to cancel filling the form?
   utter_greet:
   - text: Hey!
   - text: Hello!
@@ -86,7 +84,6 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 actions:
-- utter_ask_continue
 - utter_end_form
 - utter_goodbye
 - utter_greet
