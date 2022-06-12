@@ -1,22 +1,12 @@
-# This files contains your custom actions which can be used to run
-# custom Python code.
-#
-# See this guide on how to implement these action:
-# https://rasa.com/docs/rasa/custom-actions
-
-
-# This is a simple example for a custom action which utters "Hello World!"
-
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from rasa_sdk.events import SlotSet
 
 from thefuzz import process
 
-import json
+from actions.scraping.scraper import findProducts, getBrands
 
 
 class ActionHelloWorld(Action):
@@ -37,28 +27,31 @@ class FindProductAction(Action):
     def name(self) -> Text:
         return "action_find_product"
 
+    @staticmethod
+    def parseProductText(product, shouldLink):
+        return f"<https://idealo{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
+
     async def run(
         self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
 
+        # TODO productscount - 5
+
         brand = tracker.get_slot('tv_brand')
         price = tracker.get_slot('tv_price')
-        with open('actions/dataset/db.json') as f:
-            items = json.load(f)
-            item_text = ""
-            for i in items:
-                if (brand is None or i["brand"].casefold() == brand.casefold()) and (price is None or float(i["price"]) <= float(price)):
-                    if item_text != "":
-                        item_text += ", "
-                    if tracker.get_latest_input_channel() == "slack":
-                        item_text += f"<{i['link']}|{i['name']}>"
-                    else:
-                        item_text += i['name']
-            if item_text != "":
-                dispatcher.utter_message(
-                    "I can recommend following TVs: " + item_text)
-            else:
-                dispatcher.utter_message("No suitable products found.")
+
+        price_range = (0, price) if price != None else None
+        products = findProducts(price_range, brand)
+        products_count = len(products)
+        if len(products) == 0:
+            dispatcher.utter_message("No suitable products found.")
+        else:
+            shouldLink = tracker.get_latest_input_channel() == "slack"
+            item_text = ", ".join(
+                self.parseProductText(x, shouldLink)
+                for x in products[:5])
+            dispatcher.utter_message(
+                f"I can recommend following TVs: {item_text} and {products_count - 5} more.")
         return []
 
 
@@ -92,7 +85,7 @@ class ValidateOrderTvForm(FormValidationAction):
 
     @staticmethod
     def tv_brand_db() -> List[Text]:
-        return ["Samsung", "Sony", "LG Electronics", "Panasonic", "Vizio", "Sharp", "Toshiba", "LG"]
+        return map(lambda x: x["text"], getBrands())
 
     def validate_tv_brand(
         self,
@@ -106,7 +99,22 @@ class ValidateOrderTvForm(FormValidationAction):
         if score >= 80:
             return {"tv_brand": ext_val}
         else:
+            dispatcher.utter_message("Not a valid brand.")
             return {"tv_brand": None}
+
+    def validate_tv_price(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+
+        if int(slot_value) <= 0:
+            dispatcher.utter_message("This is not a valid price.")
+            return {"tv_price": None}
+        else:
+            return {"tv_price": slot_value}
 
     async def required_slots(
         self,
