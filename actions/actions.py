@@ -29,7 +29,7 @@ class FindProductAction(Action):
 
     @staticmethod
     def parseProductText(product, shouldLink):
-        return f"<https://idealo{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
+        return f"<https://idealo.de{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
 
     async def run(
         self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
