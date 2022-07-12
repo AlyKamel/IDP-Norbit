@@ -11,10 +11,8 @@ def readJson(path):
         data = json.load(json_file)
         return data
 
-
-brands = readJson('brands')
-
-
+# Expects data to be populated by idfetcher.py
+brands = readJson('data/brands')
 def getBrands():
     return brands
 
@@ -25,20 +23,6 @@ def getJSON(url):
     }
     res = requests.get(url, headers=header)
     return res.json()
-
-
-def storeProductIds():
-    """Stores the feature ids that are needed for creating search filters. Should be used run in a while, to account for any changes on the server side."""
-
-    url = 'https://www.idealo.de/mvc/CategoryData/results/category/4012?pageIndex=0&sortKey=DEFAULT&onlyNew=false&onlyBargain=false&onlyAvailable=false'
-    res = getJSON(url)
-    filters = res['productJsonFilterRows']
-    filters['filterAttributes'] += filters['popularFilterAttributes']
-    brands = next(x for x in filters['filterAttributes']
-                  if x["title"] == 'Hersteller')['remainingItems']
-    with open(Path(__file__).parent / 'brands.json', 'w') as f:
-        json.dump(brands, f)
-
 
 def getBrandId(brand):
     for x in brands:
