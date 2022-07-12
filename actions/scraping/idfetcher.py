@@ -21,10 +21,14 @@ def storeProductIds():
     filters = res['productJsonFilterRows']['popularFilterAttributes']
 
     brands = getFilter(filters, "Hersteller")
+    sizes = getFilter(filters, "Bildschirmgröße")
+
     output_file = Path(__file__).parent / 'data'
     output_file.mkdir(exist_ok=True, parents=True)
     with open(output_file / 'brands.json', 'w') as f:
         json.dump(brands, f, indent=4)
+    with open(output_file / 'sizes.json', 'w') as f:
+        json.dump(sizes, f, indent=4)
 
 
 if __name__ == "__main__":

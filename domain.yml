@@ -53,6 +53,8 @@ responses:
                 type: plain_text
     channel: "slack"
   - text: What price?
+  utter_ask_order_tv_form_tv_size:
+  - text: What screen size?
   utter_skip_slot:
   - text: Ok. Will skip this question.
   # utter_order_tv_info:
@@ -62,24 +64,31 @@ responses:
   utter_end_form:
   - text: Ended the form. What else could I assist you with?
 entities:
-- tv_price
 - tv_brand
+- tv_price
+- tv_size
 slots:
-  tv_price:
-    type: text
-    mappings:
-    - type: from_entity
-      entity: tv_price
   tv_brand:
     type: text
     mappings:
     - type: from_entity
       entity: tv_brand
+  tv_price:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: tv_price
+  tv_size:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: tv_size
 forms:
   order_tv_form:
     required_slots:
-    - tv_price
     - tv_brand
+    - tv_price
+    - tv_size
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
@@ -92,3 +101,4 @@ actions:
 - action_find_product
 - action_order_summary
 - validate_order_tv_form
+- action_validate_slot_mappings

@@ -3,10 +3,12 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
+from rasa_sdk.forms import ValidationAction
 
 from thefuzz import process
 
 from actions.scraping.scraper import findProducts, getBrands
+import re
 
 
 class ActionHelloWorld(Action):
@@ -39,9 +41,10 @@ class FindProductAction(Action):
 
         brand = tracker.get_slot('tv_brand')
         price = tracker.get_slot('tv_price')
+        size = tracker.get_slot('tv_size')
 
         price_range = (0, price) if price != None else None
-        products = findProducts(price_range, brand)
+        products = findProducts(price_range, brand, size)
         products_count = len(products)
         if len(products) == 0:
             dispatcher.utter_message("No suitable products found.")
@@ -68,12 +71,14 @@ class SummarizeOrderAction(Action):
 
         tv_brand = tracker.slots.get("tv_brand", False)
         tv_price = tracker.slots.get("tv_price", False)
+        tv_size = tracker.slots.get("tv_size", False)
 
         tv_brand_msg = (" " + tv_brand) if tv_brand else ""
         tv_price_msg = f" costing up to {tv_price}$" if tv_price else ""
+        tv_size_msg = f" {tv_size}in" if tv_size else ""
 
         dispatcher.utter_message(
-            f"Searching for{tv_brand_msg} TVs{tv_price_msg}..")
+            f"Searching for{tv_size_msg}{tv_brand_msg} TVs{tv_price_msg}..")
         skippedSlots.clear()
         return []
 
@@ -102,20 +107,6 @@ class ValidateOrderTvForm(FormValidationAction):
             dispatcher.utter_message("Not a valid brand.")
             return {"tv_brand": None}
 
-    def validate_tv_price(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-
-        if int(slot_value) <= 0:
-            dispatcher.utter_message("This is not a valid price.")
-            return {"tv_price": None}
-        else:
-            return {"tv_price": slot_value}
-
     async def required_slots(
         self,
         domain_slots: List[Text],
@@ -133,3 +124,48 @@ class ValidateOrderTvForm(FormValidationAction):
         updated_slots -= skippedSlots
 
         return list(updated_slots)
+
+
+class ValidateCustomSlotMappings(ValidationAction):
+
+    @staticmethod
+    def setSlotNumericalValue(slotValue):
+        return int(re.findall('\d+', slotValue)[0])
+
+    # custom extraction of slot from text
+    # async def extract_tv_price(
+    #     self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
+    # ) -> Dict[Text, Any]:
+    #     intent_of_last_user_message = tracker.get_intent_of_latest_message()
+    #     print(intent_of_last_user_message)
+    #     print("price", tracker.get_slot("tv_price"))
+    #     if intent_of_last_user_message == "inform" or intent_of_last_user_message == "order_tv":
+    #         return {"tv_price":  self.setSlotNumericalValue(tracker, "tv_price")}
+    #     return {}
+
+    def validate_tv_price(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        price = self.setSlotNumericalValue(slot_value)
+        if price <= 0:
+            dispatcher.utter_message("This is not a valid price.")
+            return {"tv_price": None}
+        return {"tv_price": price}
+
+    def validate_tv_size(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        size = self.setSlotNumericalValue(slot_value)
+        print("size", size)
+        if size <= 0:
+            dispatcher.utter_message("This is not a valid size.")
+            return {"tv_size": None}
+        return {"tv_size": size}

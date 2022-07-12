@@ -13,9 +13,9 @@ def readJson(path):
 
 # Expects data to be populated by idfetcher.py
 brands = readJson('data/brands')
+sizes = readJson('data/sizes')
 def getBrands():
     return brands
-
 
 def getJSON(url):
     header = {
@@ -31,18 +31,24 @@ def getBrandId(brand):
 
     raise ValueError('Invalid brand supplied')
 
+def getSizeId(size):
+    for x in sizes:
+        if float(x["text"].split()[0].replace(",", ".")) == float(size):
+            return x["id"]
+    raise ValueError('Size not found')
 
-def createSearchUrl(price_range, brand):
+
+def createSearchUrl(price_range, brand, size):
     url = "https://www.idealo.de/mvc/CategoryData/results/category/4012?pageIndex=0&sortKey=DEFAULT&onlyNew=false&onlyBargain=false&onlyAvailable=false"
 
     url += f"&p={price_range[0]}-{price_range[1]}" if price_range != None else ""
     url += f"&filters={getBrandId(brand)}" if brand != None else ""
-    print("url: ", url)
+    url += f"&filters={getSizeId(size)}" if size != None else ""
     return url
 
 
-def findProducts(price_range, brand):
-    url = createSearchUrl(price_range, brand)
+def findProducts(price_range, brand, size):
+    url = createSearchUrl(price_range, brand, size)
 
     products = []
     while url != None and len(products) < 50:
@@ -53,6 +59,11 @@ def findProducts(price_range, brand):
         url = pagination['nextPageAjaxLink'] if pagination != None else None
     return products
 
+
+# For testing
+# ps = findProducts((0,1000), "Samsung", 40)
+# for p in ps:
+#     print(p['link']['productLink']['href'])
 
 "https://www.idealo.de/mvc/CategoryAttributeFilters/category/4012/attribute/16"
 "https://www.idealo.de/preisvergleich/Sitemap.html"
