@@ -102,3 +102,4 @@ actions:
 - action_order_summary
 - validate_order_tv_form
 - action_validate_slot_mappings
+- action_reset_all_slots

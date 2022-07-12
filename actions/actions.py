@@ -4,6 +4,7 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.forms import ValidationAction
+from rasa_sdk.events import AllSlotsReset
 
 from thefuzz import process
 
@@ -169,3 +170,11 @@ class ValidateCustomSlotMappings(ValidationAction):
             dispatcher.utter_message("This is not a valid size.")
             return {"tv_size": None}
         return {"tv_size": size}
+
+
+class ActionResetAllSlots(Action):
+    def name(self):
+        return "action_reset_all_slots"
+    
+    def run(self, dispatcher, tracker, domain):
+        return [AllSlotsReset()]

@@ -28,7 +28,7 @@ rules:
   - action: order_tv_form
   - active_loop: order_tv_form
 
-- rule: Deactivate form
+- rule: Deactivate form and reset slots
   condition:
   - active_loop: order_tv_form
   steps:
@@ -38,6 +38,7 @@ rules:
     - requested_slot: null
   - action: action_order_summary
   - action: action_find_product
+  - action: action_reset_all_slots
 
 - rule: Skip form slot
   condition:
