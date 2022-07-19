@@ -1,19 +1,37 @@
-# Commands
-train: `rasa train`
-run in command line: `rasa shell [nlu]`
-interactive: `rasa interactive [--skip-visualization] [-m models]` (trains automatically if no model supplied)
+# FinderBot 
 
-rasa x: (docker has to be running)
-setup: `curl -O https://rei.rasa.com/rei.sh && bash rei.sh -y`
-`rasactl connect rasa`?
-`sudo rasactl start --project`?
-`rasa x`? downgrade?
+Rasa-based chatbot with the mission to assist customers to find various electronic products based on their criteria.
 
-action server: 
-`python -m rasa_sdk --actions actions`
+## How to run the bot
 
-run on slack:
-expose port: `lt --port 5005 --subdomain rasabot`
-change url here: https://api.slack.com/apps/A03GPUMGBL6/event-subscriptions? and interactive components
+### Train
+
+```
+$ rasa train
+```
+
+Train a new model.
+
+### Run
 
 
+Rasa can run in the terminal for quick testing using: 
+```
+$ rasa shell
+```
+or
+```
+$ rasa interactive [--skip-visualization] [-m MODELPATH]
+```
+for more debugging options and the ability to fix any issues. For quicker execution, the flags `--skip-visualization` and `-m MODELPATH` can be supplied, with `MODELPATH` being the path to a pretrained model.
+For more information, visit the [official Rasa website](http://www.rasa.com).
+
+## How to run the action server
+
+```
+python -m rasa_sdk --actions actions
+```
+
+## How to run on Slack
+
+Rasa has great documentation on [how to connect a chatbot to Slack](https://rasa.com/docs/rasa/connectors/slack) and various other services. Also check out [this guide](https://api.slack.com/bot-users) from Slack.
