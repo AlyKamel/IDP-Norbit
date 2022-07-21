@@ -54,8 +54,9 @@ class FindProductAction(Action):
             item_text = ", ".join(
                 self.parseProductText(x, shouldLink)
                 for x in products[:5])
+            more_text = f" and {products_count - 5} more" if products_count > 5 else ""
             dispatcher.utter_message(
-                f"I can recommend following TVs: {item_text} and {products_count - 5} more.")
+                f"I can recommend following TVs: {item_text}{more_text}.")
         return []
 
 
