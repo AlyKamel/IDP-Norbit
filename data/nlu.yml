@@ -60,6 +60,7 @@ nlu:
   examples: |
     - I would like to order a TV
     - I want to buy a television
+    - I want to order a tv
     - Can you help me find a television?
     - I am searching for a TV screen
     - I'm looking for a tv.
@@ -80,7 +81,7 @@ nlu:
     - i want a [48"](tv_size) [toshiba](tv_brand) tv costing [400 dollars](tv_price)
     - [600$](tv_price) [sony](tv_brand) and [40in](tv_size)
     - buy tv for [200dollars](tv_price) of brand [panasonic](tv_brand)
-    - looking for [40inch](tv_size) [sony](tv_br). willing to pay up to [200$](tv_price)
+    - looking for [40inch](tv_size) [sony](tv_brand). willing to pay up to [200$](tv_price)
     - [50in](tv_size) [Grundig](tv_brand) [300$](tv_price) 
 - intent: inform
   examples: |

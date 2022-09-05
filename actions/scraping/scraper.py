@@ -8,7 +8,8 @@ def readJson(path):
     path += '.json'
     path = Path(__file__).parent / path
     with path.open() as json_file:
-        data = json.load(json_file)
+        data = json_file.read()
+        data = json.loads(data)
         return data
 
 # Expects data to be populated by idfetcher.py
@@ -25,16 +26,15 @@ def getJSON(url):
     return res.json()
 
 def getBrandId(brand):
-    for x in brands:
-        if x["text"] == brand:
-            return x["id"]
-
-    raise ValueError('Invalid brand supplied')
+    try:
+        return brands[brand]
+    except KeyError:
+        raise ValueError('Invalid brand supplied')
 
 def getSizeId(size):
-    for x in sizes:
-        if float(x["text"].split()[0].replace(",", ".")) == float(size):
-            return x["id"]
+    for s, id in sizes.items():
+        if float(s.split()[0].replace(",", ".")) == float(size):
+            return id
     raise ValueError('Size not found')
 
 

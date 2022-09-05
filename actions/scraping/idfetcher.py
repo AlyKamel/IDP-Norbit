@@ -11,7 +11,11 @@ def getJSON(url):
     return res.json()
 
 def getFilter(filters, name):
-    return next(x for x in filters if x["title"] == name)['remainingItems']
+    att = next(x for x in filters if x["title"] == name)['remainingItems']
+    name_id_dic = {}
+    for i in att:
+        name_id_dic[i['text']] = i['id']
+    return name_id_dic
 
 def storeProductIds():
     """Stores the feature ids that are needed for creating search filters. Should be used run in a while, to account for any changes on the server side."""

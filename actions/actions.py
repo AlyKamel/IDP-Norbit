@@ -27,12 +27,11 @@ class ActionHelloWorld(Action):
 
 
 class FindProductAction(Action):
+
     def name(self) -> Text:
         return "action_find_product"
 
-    @staticmethod
-    def parseProductText(product, shouldLink):
-        return f"<https://idealo.de{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
+        return f"<{self.BASE_URL}{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
 
     async def run(
         self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
@@ -156,6 +155,7 @@ class ValidateCustomSlotMappings(ValidationAction):
         if price <= 0:
             dispatcher.utter_message("This is not a valid price.")
             return {"tv_price": None}
+        dispatcher.utter_message("Set price to " + slot_value)
         return {"tv_price": price}
 
     def validate_tv_size(
@@ -170,7 +170,23 @@ class ValidateCustomSlotMappings(ValidationAction):
         if size <= 0:
             dispatcher.utter_message("This is not a valid size.")
             return {"tv_size": None}
+        dispatcher.utter_message("Set size to " + slot_value)
+            return {"tv_size": None}
         return {"tv_size": size}
+
+    def validate_tv_brand(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        if slot_value != None:
+            dispatcher.utter_message("Set brand to " + slot_value)
+            return {"tv_brand": slot_value}
+        else:
+            dispatcher.utter_message("Not a valid brand.")
+            return {"tv_brand": None}
 
 
 class ActionResetAllSlots(Action):

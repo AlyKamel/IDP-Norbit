@@ -29,7 +29,7 @@ For more information, visit the [official Rasa website](http://www.rasa.com).
 ## How to run the action server
 
 ```
-python -m rasa_sdk --actions actions
+cd actions; python -m rasa_sdk --actions actions
 ```
 
 ## How to run on Slack
