@@ -15,8 +15,13 @@ def readJson(path):
 # Expects data to be populated by idfetcher.py
 brands = readJson('data/brands')
 sizes = readJson('data/sizes')
+types = readJson('data/types')
+
 def getBrands():
     return brands
+
+def getTypes():
+    return types
 
 def getJSON(url):
     header = {
@@ -37,18 +42,24 @@ def getSizeId(size):
             return id
     raise ValueError('Size not found')
 
+def getTypeId(type):
+    # for t, id in types.items():
+    #     if float(t.split()[0].replace(",", ".")) == float(size):
+    #         return id
+    raise ValueError('Type not found')
 
-def createSearchUrl(price_range, brand, size):
+def createSearchUrl(price_range, brand, size, type):
     url = "https://www.idealo.de/mvc/CategoryData/results/category/4012?pageIndex=0&sortKey=DEFAULT&onlyNew=false&onlyBargain=false&onlyAvailable=false"
 
     url += f"&p={price_range[0]}-{price_range[1]}" if price_range != None else ""
     url += f"&filters={getBrandId(brand)}" if brand != None else ""
     url += f"&filters={getSizeId(size)}" if size != None else ""
+    url += f"&filters={getTypeId(type)}" if type != None else ""
     return url
 
 
-def findProducts(price_range, brand, size):
-    url = createSearchUrl(price_range, brand, size)
+def findProducts(price_range, brand, size, type):
+    url = createSearchUrl(price_range, brand, size, type)
 
     products = []
     while url != None and len(products) < 50:

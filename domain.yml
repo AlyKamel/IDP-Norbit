@@ -55,10 +55,10 @@ responses:
   - text: What price?
   utter_ask_order_tv_form_tv_size:
   - text: What screen size?
+  utter_ask_order_tv_form_tv_type:
+  - text: What type?
   utter_skip_slot:
   - text: Ok. Will skip this question.
-  # utter_order_tv_info:
-  # - text: Looking for a {tv_brand} TV of price {tv_price}...
   utter_restart:
   - text: Ok. Chat history has been reset.
   utter_end_form:
@@ -67,6 +67,7 @@ entities:
 - tv_brand
 - tv_price
 - tv_size
+- tv_type
 slots:
   tv_brand:
     type: text
@@ -83,12 +84,18 @@ slots:
     mappings:
     - type: from_entity
       entity: tv_size
+  tv_type:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: tv_type
 forms:
   order_tv_form:
     required_slots:
     - tv_brand
     - tv_price
     - tv_size
+    - tv_type
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

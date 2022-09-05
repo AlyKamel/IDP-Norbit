@@ -8,7 +8,7 @@ from rasa_sdk.events import AllSlotsReset
 
 from thefuzz import process
 
-from actions.scraping.scraper import findProducts, getBrands
+from scraping.scraper import findProducts, getBrands, getTypes
 import re
 
 
@@ -30,6 +30,7 @@ class FindProductAction(Action):
         brand = tracker.get_slot('tv_brand')
         price = tracker.get_slot('tv_price')
         size = tracker.get_slot('tv_size')
+        type = tracker.get_slot('tv_type')
 
         price_range = (0, price) if price != None else None
         products = findProducts(price_range, brand, size)
@@ -61,13 +62,15 @@ class SummarizeOrderAction(Action):
         tv_brand = tracker.slots.get("tv_brand", False)
         tv_price = tracker.slots.get("tv_price", False)
         tv_size = tracker.slots.get("tv_size", False)
+        tv_type = tracker.slots.get("tv_type", False)
 
         tv_brand_msg = (" " + tv_brand) if tv_brand else ""
         tv_price_msg = f" costing up to {tv_price}$" if tv_price else ""
         tv_size_msg = f" {tv_size}in" if tv_size else ""
+        tv_type_msg = (" " + tv_type) if tv_type else ""
 
         dispatcher.utter_message(
-            f"Searching for{tv_size_msg}{tv_brand_msg} TVs{tv_price_msg}..")
+            f"Searching for{tv_size_msg}{tv_brand_msg}{tv_type_msg} TVs{tv_price_msg}..")
         skippedSlots.clear()
         return []
 
@@ -159,7 +162,6 @@ class ValidateCustomSlotMappings(ValidationAction):
             dispatcher.utter_message("This is not a valid size.")
             return {"tv_size": None}
         dispatcher.utter_message("Set size to " + slot_value)
-            return {"tv_size": None}
         return {"tv_size": size}
 
     def validate_tv_brand(
@@ -175,6 +177,20 @@ class ValidateCustomSlotMappings(ValidationAction):
         else:
             dispatcher.utter_message("Not a valid brand.")
             return {"tv_brand": None}
+
+    def validate_tv_type(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        if slot_value != None:
+            dispatcher.utter_message("Set type to " + slot_value)
+            return {"tv_type": slot_value}
+        else:
+            dispatcher.utter_message("Not a valid type.")
+            return {"tv_type": None}
 
 
 class ActionResetAllSlots(Action):

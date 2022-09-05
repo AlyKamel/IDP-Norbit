@@ -26,6 +26,9 @@ def storeProductIds():
 
     brands = getFilter(filters, "Hersteller")
     sizes = getFilter(filters, "Bildschirmgröße")
+    types = getFilter(filters, "Produkttyp")
+    for k in types:
+        k = k.replace("Fernseher", "")
 
     output_file = Path(__file__).parent / 'data'
     output_file.mkdir(exist_ok=True, parents=True)
@@ -33,7 +36,18 @@ def storeProductIds():
         json.dump(brands, f, indent=4)
     with open(output_file / 'sizes.json', 'w') as f:
         json.dump(sizes, f, indent=4)
+    with open(output_file / 'types.json', 'w') as f:
+        json.dump(types, f, indent=4)
 
+    # add lookup tables
+    output_file = Path('components/lookup')
+    output_file.mkdir(exist_ok=True, parents=True)
+    with open(output_file / 'tv_brands.txt', 'w') as f:
+        for key in brands:
+            f.write(f"{key}\n")
+    with open(output_file / 'tv_types.txt', 'w') as f:
+        for key in types:
+            f.write(f"{key}\n")
 
 if __name__ == "__main__":
     storeProductIds()
