@@ -49,7 +49,7 @@ rules:
   - action: order_tv_form
   - active_loop: order_tv_form
 
-- rule: Stop form
+- rule: Stop form #TODO fix
   condition:
   - active_loop: order_tv_form
   steps:

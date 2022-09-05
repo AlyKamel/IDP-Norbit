@@ -12,25 +12,13 @@ from actions.scraping.scraper import findProducts, getBrands
 import re
 
 
-class ActionHelloWorld(Action):
-
-    def name(self) -> Text:
-        return "action_hello_world"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-        dispatcher.utter_message(text="Hello World!")
-
-        return []
-
-
 class FindProductAction(Action):
+    BASE_URL = 'https://idealo.de'
 
     def name(self) -> Text:
         return "action_find_product"
 
+    def parseProductText(self, product, shouldLink):
         return f"<{self.BASE_URL}{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
 
     async def run(
@@ -89,24 +77,24 @@ class ValidateOrderTvForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_order_tv_form"
 
-    @staticmethod
-    def tv_brand_db() -> List[Text]:
-        return map(lambda x: x["text"], getBrands())
+    # @staticmethod
+    # def tv_type_db() -> List[Text]:
+    #     return map(lambda x: x["text"], getTypes())
 
-    def validate_tv_brand(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-
-        ext_val, score = process.extractOne(slot_value, self.tv_brand_db())
-        if score >= 80:
-            return {"tv_brand": ext_val}
-        else:
-            dispatcher.utter_message("Not a valid brand.")
-            return {"tv_brand": None}
+#     def validate_tv_type(
+#         self,
+#         slot_value: Any,
+#         dispatcher: CollectingDispatcher,
+#         tracker: Tracker,
+#         domain: DomainDict,
+#     ) -> Dict[Text, Any]:
+# 
+#         ext_val, score = process.extractOne(slot_value, self.tv_type_db())
+#         if score >= 60:
+#             return {"tv_type": ext_val}
+#         else:
+#             dispatcher.utter_message("Not a valid type.")
+#             return {"tv_type": None}
 
     async def required_slots(
         self,
