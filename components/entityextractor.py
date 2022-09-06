@@ -31,9 +31,9 @@ logger = logging.getLogger(__name__)
     DefaultV1Recipe.ComponentType.ENTITY_EXTRACTOR, is_trainable=True
 )
 class FuzzyEntityExtractor(GraphComponent, EntityExtractorMixin):
-    LOOKUP_PATH = "components/lookup"
-    ATTRIBUTES = ["tv_brands", "tv_types"]
-    threshold_score = 70 # TODO 80 for types
+    ENTITY = "tv_brand"
+    LOOKUP_PATH = f"data/lookup/{ENTITY}.txt"
+    threshold_score = 70
 
     @staticmethod
     def get_default_config() -> Dict[Text, Any]:
@@ -60,49 +60,43 @@ class FuzzyEntityExtractor(GraphComponent, EntityExtractorMixin):
         self._model_storage = model_storage
         self._resource = resource
 
-        # super(FuzzyEntityExtractor, self).__init__(config)
-        self.lookups = {}
-        for att in self.ATTRIBUTES:
-            with open(f"{self.LOOKUP_PATH}/{att}.txt") as f:
-                self.lookups[att] = f.read().splitlines()
+        with open(self.LOOKUP_PATH) as f:
+            self.brand_lookup = f.read().splitlines()
 
     def train(self, training_data: TrainingData) -> Resource:
         pass
 
     def process(self, messages: List[Message]) -> List[Message]:
         for message in messages:
-            entities = []
             tokens = message.get("text_tokens")
-            if tokens != None:
-                for name, list in self.lookups.items():
-                    temp_entities = []
-                    for token in tokens:
-                        f = process.extractOne(
-                            token.text,
-                            list,
-                            score_cutoff=self.threshold_score,
-                            scorer=fuzz.ratio,
-                        )
+            if tokens is not None:
+                temp_entities = []
+                for token in tokens:
+                    f = process.extractOne(
+                        token.text,
+                        self.brand_lookup,
+                        score_cutoff=self.threshold_score,
+                        scorer=fuzz.ratio,
+                    )
 
-                        if f != None:
-                            val, score = f
-                            temp_entities.append({
-                                ENTITY_ATTRIBUTE_TYPE: name[:-1],
-                                ENTITY_ATTRIBUTE_START: token.start,
-                                ENTITY_ATTRIBUTE_END: token.end,
-                                TEXT: token.text,
-                                ENTITY_ATTRIBUTE_VALUE: val,
-                                ENTITY_ATTRIBUTE_CONFIDENCE: score,
-                            })
+                    if f is not None:
+                        val, score = f
+                        temp_entities.append({
+                            ENTITY_ATTRIBUTE_TYPE: self.ENTITY,
+                            ENTITY_ATTRIBUTE_START: token.start,
+                            ENTITY_ATTRIBUTE_END: token.end,
+                            TEXT: token.text,
+                            ENTITY_ATTRIBUTE_VALUE: val,
+                            ENTITY_ATTRIBUTE_CONFIDENCE: score,
+                        })
 
-                    if len(temp_entities) > 0:
-                        max_conf_item = max(temp_entities, key=lambda x: x[ENTITY_ATTRIBUTE_CONFIDENCE])
-                        print('max conf entity:', val, score)
-                        entities.append(max_conf_item)
-            if len(entities) > 0: #TODO test order(brand)->greet->order(brand)
-                message.set(
-                    ENTITIES,
-                    message.get(ENTITIES, []) + entities,
-                    add_to_output=True,
-                )
+                if temp_entities:
+                    max_conf_item = max(temp_entities, key=lambda x: x[ENTITY_ATTRIBUTE_CONFIDENCE])
+                    print('max conf entity:', val, score)
+                    message.set(
+                        ENTITIES,
+                        message.get(ENTITIES, []) + [max_conf_item],
+                        add_to_output=True,
+                    )
+
         return messages

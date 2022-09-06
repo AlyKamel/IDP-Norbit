@@ -27,8 +27,7 @@ def storeProductIds():
     brands = getFilter(filters, "Hersteller")
     sizes = getFilter(filters, "Bildschirmgröße")
     types = getFilter(filters, "Produkttyp")
-    for k in types:
-        k = k.replace("Fernseher", "")
+    types = {k.replace("-", " ").replace("Fernseher", "").strip(): v for k, v in types.items()}
 
     output_file = Path(__file__).parent / 'data'
     output_file.mkdir(exist_ok=True, parents=True)
@@ -40,14 +39,19 @@ def storeProductIds():
         json.dump(types, f, indent=4)
 
     # add lookup tables
-    output_file = Path('components/lookup')
+    output_file = Path('data/lookup')
+
+    # Generate txt file for tv_brand lookup
     output_file.mkdir(exist_ok=True, parents=True)
-    with open(output_file / 'tv_brands.txt', 'w') as f:
+    with open(output_file / 'tv_brand.txt', 'w') as f:
         for key in brands:
             f.write(f"{key}\n")
-    with open(output_file / 'tv_types.txt', 'w') as f:
+
+    # Generate yml file for tv_type lookup
+    with open(output_file / 'tv_type.yml', 'w') as f:
+        f.write(f"version: \"3.1\"\nnlu:\n  - lookup: tv_type  \n    examples: |\n")
         for key in types:
-            f.write(f"{key}\n")
+            f.write(f"      - {key}\n")
 
 if __name__ == "__main__":
     storeProductIds()

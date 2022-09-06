@@ -122,7 +122,7 @@ class ValidateCustomSlotMappings(ValidationAction):
 
     @staticmethod
     def setSlotNumericalValue(slotValue):
-        return int(re.findall('\d+', slotValue)[0])
+        return int(re.findall('[0-9]+', slotValue)[0])
 
     # custom extraction of slot from text
     # async def extract_tv_price(
@@ -159,7 +159,7 @@ class ValidateCustomSlotMappings(ValidationAction):
         size = self.setSlotNumericalValue(slot_value)
         print("size", size)
         if size <= 0:
-            dispatcher.utter_message("This is not a valid size.")
+            dispatcher.utter_message("This is not a valid size.") # TODO no output
             return {"tv_size": None}
         dispatcher.utter_message("Set size to " + slot_value)
         return {"tv_size": size}
