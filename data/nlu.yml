@@ -64,37 +64,37 @@ nlu:
     - Can you help me find a television?
     - I am searching for a TV screen
     - I'm looking for a tv.
-    - I'd like a [350$](tv_price) television
-    - I want to order a television costing [60dollars](tv_price)
-    - want a [120$](tv_price) television
-    - I want a [140usd](tv_price) television
-    - looking for a [150 dollar](tv_price) tv
+    - I'd like a [350€](tv_price) television
+    - I want to order a television costing [60euros](tv_price)
+    - want a [120€](tv_price) television
+    - I want a [140eur](tv_price) television
+    - looking for a [150 euro](tv_price) tv
     - i want to order a television today
     - i want to buy a [samsung](tv_brand) tv
     - tv please
     - im searching for a television
-    - buy tv for up to [500 dollars](tv_price)
-    - [1000$](tv_price) television
+    - buy tv for up to [500 euros](tv_price)
+    - [1000€](tv_price) television
     - tv
     - buy a tv
-    - tv with a [40 inches](tv_size) screen for [800 dollars](tv_price)
-    - i want a [48"](tv_size) tv costing [400 dollars](tv_price)
-    - [600$](tv_price) television and [40in](tv_size)
-    - buy tv for [200dollars](tv_price)
-    - looking for [40inch](tv_size). willing to pay up to [200$](tv_price)
-    - [50in](tv_size) [300$](tv_price) 
+    - tv with a [40 inches](tv_size) screen for [800 euros](tv_price)
+    - i want a [48"](tv_size) tv costing [400 euro](tv_price)
+    - [600€](tv_price) television and [40in](tv_size)
+    - buy tv for [200euros](tv_price)
+    - looking for [40inch](tv_size). willing to pay up to [200€](tv_price)
+    - [50in](tv_size) [300€](tv_price) 
     - i need [4k](tv_type) TV
 - intent: inform
   examples: |
-    - I'd like a [350$](tv_price) television
-    - I want to order a [60$](tv_price) television
-    - [140 dollars](tv_price)
-    - want a [120$](tv_price) television
-    - [300usd](tv_price)
-    - I want a [140 usd](tv_price) television
-    - Searching for a [LG](tv_brand) tv
-    - [400$](tv_price)
-    - [5000$](tv_price) and [40in](tv_size)
+    - [350 euros](tv_price) television
+    - [60€](tv_price) television
+    - [140 euro](tv_price)
+    - [120€](tv_price) television
+    - [300eur](tv_price)
+    - [140 eur](tv_price) television
+    - need a [LG](tv_brand) tv
+    - [400€](tv_price)
+    - [5000€](tv_price) and [40in](tv_size)
     - [40 inches](tv_size)
     - [34 inch](tv_size) tv
     - it should be [28 inches](tv_size)
@@ -122,7 +122,7 @@ nlu:
     - skip this question
 - regex: tv_price
   examples: |
-    - \d{2,4}\s*($|usd|dollar|dollars)
+    - \d{2,4}\s*(€|eur|euro|euros)
 - regex: tv_size
   examples: |
     - \d{2,4}\s*("|in|inch|inches)

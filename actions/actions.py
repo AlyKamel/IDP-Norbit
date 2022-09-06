@@ -115,7 +115,7 @@ class ValidateOrderTvForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         dispatcher.utter_message("Set size to " + str(slot_value))
-        return {"tv_price": slot_value}
+        return {"tv_size": slot_value}
 
     async def required_slots(
         self,
@@ -124,15 +124,11 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict
     ) -> List[Text]:
-
         updated_slots = set(domain_slots)
-
         if tracker.get_intent_of_latest_message() == "skip":
             slot = tracker.get_slot("requested_slot")
             skippedSlots.add(slot)
-
         updated_slots -= skippedSlots
-
         return list(updated_slots)
 
 class ValidateCustomSlotMappings(ValidationAction):
@@ -177,7 +173,6 @@ class ValidateCustomSlotMappings(ValidationAction):
             dispatcher.utter_message("This is not a valid size.")
             return {"tv_size": None}
         return {"tv_size": size}
-
 
 class ActionResetAllSlots(Action):
     def name(self):
