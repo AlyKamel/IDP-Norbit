@@ -6,9 +6,7 @@ from rasa_sdk.types import DomainDict
 from rasa_sdk.forms import ValidationAction
 from rasa_sdk.events import AllSlotsReset
 
-from thefuzz import process
-
-from scraping.scraper import findProducts, getBrands, getTypes
+from scraping.scraper import findProducts
 import re
 
 
@@ -33,7 +31,7 @@ class FindProductAction(Action):
         type = tracker.get_slot('tv_type')
 
         price_range = (0, price) if price != None else None
-        products = findProducts(price_range, brand, size)
+        products = findProducts(price_range, brand, size, type)
         products_count = len(products)
         if len(products) == 0:
             dispatcher.utter_message("No suitable products found.")
@@ -76,28 +74,48 @@ class SummarizeOrderAction(Action):
 
 
 class ValidateOrderTvForm(FormValidationAction):
-
     def name(self) -> Text:
         return "validate_order_tv_form"
 
-    # @staticmethod
-    # def tv_type_db() -> List[Text]:
-    #     return map(lambda x: x["text"], getTypes())
+    def validate_tv_brand(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        dispatcher.utter_message("Set brand to " + slot_value)
+        return {"tv_brand": slot_value}
 
-#     def validate_tv_type(
-#         self,
-#         slot_value: Any,
-#         dispatcher: CollectingDispatcher,
-#         tracker: Tracker,
-#         domain: DomainDict,
-#     ) -> Dict[Text, Any]:
-# 
-#         ext_val, score = process.extractOne(slot_value, self.tv_type_db())
-#         if score >= 60:
-#             return {"tv_type": ext_val}
-#         else:
-#             dispatcher.utter_message("Not a valid type.")
-#             return {"tv_type": None}
+    def validate_tv_type(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        dispatcher.utter_message("Set type to " + slot_value)
+        return {"tv_type": slot_value}
+
+    def validate_tv_price(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        dispatcher.utter_message("Set price to " + str(slot_value))
+        return {"tv_price": slot_value}
+
+    def validate_tv_size(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        dispatcher.utter_message("Set size to " + str(slot_value))
+        return {"tv_price": slot_value}
 
     async def required_slots(
         self,
@@ -116,7 +134,6 @@ class ValidateOrderTvForm(FormValidationAction):
         updated_slots -= skippedSlots
 
         return list(updated_slots)
-
 
 class ValidateCustomSlotMappings(ValidationAction):
 
@@ -146,7 +163,6 @@ class ValidateCustomSlotMappings(ValidationAction):
         if price <= 0:
             dispatcher.utter_message("This is not a valid price.")
             return {"tv_price": None}
-        dispatcher.utter_message("Set price to " + slot_value)
         return {"tv_price": price}
 
     def validate_tv_size(
@@ -157,40 +173,10 @@ class ValidateCustomSlotMappings(ValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         size = self.setSlotNumericalValue(slot_value)
-        print("size", size)
         if size <= 0:
-            dispatcher.utter_message("This is not a valid size.") # TODO no output
+            dispatcher.utter_message("This is not a valid size.")
             return {"tv_size": None}
-        dispatcher.utter_message("Set size to " + slot_value)
         return {"tv_size": size}
-
-    def validate_tv_brand(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        if slot_value != None:
-            dispatcher.utter_message("Set brand to " + slot_value)
-            return {"tv_brand": slot_value}
-        else:
-            dispatcher.utter_message("Not a valid brand.")
-            return {"tv_brand": None}
-
-    def validate_tv_type(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        if slot_value != None:
-            dispatcher.utter_message("Set type to " + slot_value)
-            return {"tv_type": slot_value}
-        else:
-            dispatcher.utter_message("Not a valid type.")
-            return {"tv_type": None}
 
 
 class ActionResetAllSlots(Action):
