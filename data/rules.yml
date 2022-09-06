@@ -54,9 +54,8 @@ rules:
   - active_loop: order_tv_form
   steps:
   - intent: stop
+  - action: action_deactivate_loop
   - active_loop: null
-  - slot_was_set:
-    - requested_slot: null
   - action: utter_end_form
 
 - rule: Reset history

@@ -110,6 +110,7 @@ nlu:
   examples: |
     - stop
     - cancel
+    - end
 - intent: skip
   examples: |
     - skip
