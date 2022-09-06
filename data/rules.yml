@@ -17,6 +17,11 @@ rules:
   - intent: bot_challenge
   - action: utter_iamabot
 
+- rule: Describe to user what bot can do
+  steps:
+  - intent: task_challenge
+  - action: utter_task_description
+
 - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
   steps:
   - intent: nlu_fallback
@@ -49,7 +54,7 @@ rules:
   - action: order_tv_form
   - active_loop: order_tv_form
 
-- rule: Stop form #TODO fix
+- rule: Stop form
   condition:
   - active_loop: order_tv_form
   steps:

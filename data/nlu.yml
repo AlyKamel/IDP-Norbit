@@ -56,6 +56,16 @@ nlu:
     - what are you?
     - who are you?
     - who is this?
+- intent: task_challenge
+  examples: |
+    - what can you do?
+    - what do you do
+    - what is your job
+    - how can you help me
+    - what does this bot accomplish?
+    - what is your task?
+    - what questions can you answer?
+    - help
 - intent: order_tv
   examples: |
     - I would like to order a TV

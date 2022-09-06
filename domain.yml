@@ -63,6 +63,8 @@ responses:
   - text: Ok. Chat history has been reset.
   utter_end_form:
   - text: Ended the form. What else could I assist you with?
+  utter_task_description:
+  - text: I can help you look for a TV that suits your needs based on the brand you want, the price you are willing to pay (in €), the screen size (in inches) and features you would like your TV to have.
 entities:
 - tv_brand
 - tv_price
@@ -100,6 +102,7 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 actions:
+- utter_task_description
 - utter_end_form
 - utter_goodbye
 - utter_greet
