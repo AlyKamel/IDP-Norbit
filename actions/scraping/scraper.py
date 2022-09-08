@@ -1,7 +1,6 @@
-import requests
 import json
-from fake_useragent import UserAgent
 from pathlib import Path
+from util.util import fetchJSON
 
 
 def readJson(path):
@@ -23,13 +22,6 @@ def getBrands():
 def getTypes():
     return types
 
-def getJSON(url):
-    header = {
-        'User-Agent': UserAgent().safari
-    }
-    res = requests.get(url, headers=header)
-    return res.json()
-
 def getBrandId(brand):
     try:
         return brands[brand]
@@ -43,10 +35,11 @@ def getSizeId(size):
     raise ValueError('Size not found')
 
 def getTypeId(type):
+    return 1921183 # 4K
     # for t, id in types.items():
     #     if float(t.split()[0].replace(",", ".")) == float(size):
     #         return id
-    raise ValueError('Type not found')
+    # raise ValueError('Type not found')
 
 def createSearchUrl(price_range, brand, size, type):
     url = "https://www.idealo.de/mvc/CategoryData/results/category/4012?pageIndex=0&sortKey=DEFAULT&onlyNew=false&onlyBargain=false&onlyAvailable=false"
@@ -63,7 +56,7 @@ def findProducts(price_range, brand, size, type):
 
     products = []
     while url != None and len(products) < 50:
-        res = getJSON(url)
+        res = fetchJSON(url)
         products += res['categoryJsonResults']['entries']
 
         pagination = res['categoryPagination']
@@ -72,6 +65,10 @@ def findProducts(price_range, brand, size, type):
 
 
 # For testing
-# ps = findProducts((0,1000), "Samsung", 40)
+# ps = findProducts((0, 550), "Samsung", 65, "4K")
 # for p in ps:
 #     print(p['link']['productLink']['href'])
+# correct_results = ['/preisvergleich/OffersOfProduct/201240173_-gu65au7179u-samsung.html',
+#       'https://www.idealo.de/preisvergleich/OffersOfProduct/201452975_-ue65tu7095uxxc-samsung.html']
+# if ps != correct_results:
+#     raise ValueError("invalid result")
