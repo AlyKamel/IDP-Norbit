@@ -18,12 +18,13 @@ pipeline:
     analyzer: char_wb
     min_ngram: 1
     max_ngram: 4
+  - name: RegexEntityExtractor # extracts price/size/type
+  - name: components.entityextractor.FuzzyEntityExtractor # extracts brand
+  - name: EntitySynonymMapper
   - name: DIETClassifier
     epochs: 100
     constrain_similarities: true
-  - name: RegexEntityExtractor
-  - name: components.entityextractor.FuzzyEntityExtractor
-  - name: EntitySynonymMapper
+    entity_recognition: false
   - name: ResponseSelector
     epochs: 100
     constrain_similarities: true
