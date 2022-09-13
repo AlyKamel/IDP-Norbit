@@ -5,6 +5,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.forms import ValidationAction
 from rasa_sdk.events import AllSlotsReset
+from scraping.scraper import getValidSize
 
 from scraping.scraper import findProducts
 import re
@@ -63,7 +64,7 @@ class SummarizeOrderAction(Action):
         tv_type = tracker.slots.get("tv_type", False)
 
         tv_brand_msg = (" " + tv_brand) if tv_brand else ""
-        tv_price_msg = f" costing up to {tv_price}$" if tv_price else ""
+        tv_price_msg = f" costing up to {tv_price}€" if tv_price else ""
         tv_size_msg = f" {tv_size}in" if tv_size else ""
         tv_type_msg = (" " + tv_type) if tv_type else ""
 
@@ -104,7 +105,7 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        dispatcher.utter_message("Set price to " + str(slot_value))
+        dispatcher.utter_message("Set price to " + str(slot_value) + "€")
         return {"tv_price": slot_value}
 
     def validate_tv_size(
@@ -114,7 +115,8 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        dispatcher.utter_message("Set size to " + str(slot_value))
+        if slot_value != None:
+            dispatcher.utter_message("Set size to nearest available: " + str(slot_value) + "\"")
         return {"tv_size": slot_value}
 
     async def required_slots(
@@ -156,9 +158,6 @@ class ValidateCustomSlotMappings(ValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         price = self.setSlotNumericalValue(slot_value)
-        if price <= 0:
-            dispatcher.utter_message("This is not a valid price.")
-            return {"tv_price": None}
         return {"tv_price": price}
 
     def validate_tv_size(
@@ -169,9 +168,7 @@ class ValidateCustomSlotMappings(ValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         size = self.setSlotNumericalValue(slot_value)
-        if size <= 0:
-            dispatcher.utter_message("This is not a valid size.")
-            return {"tv_size": None}
+        size = getValidSize(size)
         return {"tv_size": size}
 
 class ActionResetAllSlots(Action):

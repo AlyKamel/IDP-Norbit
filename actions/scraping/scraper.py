@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from util.util import fetchJSON
+from scraping.util.util import fetchJSON
 
 
 def readJson(path):
@@ -41,6 +41,38 @@ def getTypeId(type):
     #         return id
     # raise ValueError('Type not found')
 
+def getValidSize(size):
+
+    # valid_size = 0
+    # size_string = str(size).replace('.', ',') + ' Zoll'
+    # pos = bisect_left(list(sizes.keys()), size_string)
+    # if pos == 0:
+    #     valid_size = sizes[0]
+    # elif pos == len(sizes):
+    #     valid_size = sizes[-1]
+    # else:
+    #     sm_size = sizes[pos - 1]
+    #     lg_size = sizes[pos + 1]
+    #     if lg_size - size < size - sm_size:
+    #         valid_size = lg_size
+    #     else:
+    #         valid_size = sm_size
+    # return valid_size
+
+    # get closest number
+    diff = float('inf')
+    valid_size = 0
+    for s in sizes:
+        # parse to float
+        s = float(s.replace(',', '.').replace(' Zoll', ''))
+        temp_diff = abs(s - size)
+        if temp_diff < diff:
+            diff = temp_diff
+            valid_size = s
+        else:
+            break
+    return valid_size
+
 def createSearchUrl(price_range, brand, size, type):
     url = "https://www.idealo.de/mvc/CategoryData/results/category/4012?pageIndex=0&sortKey=DEFAULT&onlyNew=false&onlyBargain=false&onlyAvailable=false"
 
@@ -62,7 +94,6 @@ def findProducts(price_range, brand, size, type):
         pagination = res['categoryPagination']
         url = pagination['nextPageAjaxLink'] if pagination != None else None
     return products
-
 
 # For testing
 # ps = findProducts((0, 550), "Samsung", 65, "4K")
