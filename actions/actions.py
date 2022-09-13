@@ -137,7 +137,7 @@ class ValidateCustomSlotMappings(ValidationAction):
 
     @staticmethod
     def setSlotNumericalValue(slotValue):
-        return int(re.findall('[0-9]+', slotValue)[0])
+        return float(re.findall('[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])        
 
     # custom extraction of slot from text
     # async def extract_tv_price(
