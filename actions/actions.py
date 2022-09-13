@@ -85,7 +85,8 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        dispatcher.utter_message("Set brand to " + slot_value)
+        if tracker.active_loop:
+            dispatcher.utter_message("Set brand to " + slot_value)
         return {"tv_brand": slot_value}
 
     def validate_tv_type(
@@ -95,7 +96,8 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        dispatcher.utter_message("Set type to " + slot_value)
+        if tracker.active_loop:
+            dispatcher.utter_message("Set type to " + slot_value)
         return {"tv_type": slot_value}
 
     def validate_tv_price(
@@ -105,7 +107,8 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        dispatcher.utter_message("Set price to " + str(slot_value) + "€")
+        if tracker.active_loop:
+            dispatcher.utter_message("Set price to " + str(slot_value) + "€")
         return {"tv_price": slot_value}
 
     def validate_tv_size(
@@ -115,8 +118,9 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        if slot_value != None:
-            dispatcher.utter_message("Set size to nearest available: " + str(slot_value) + "\"")
+        if tracker.active_loop:
+            dispatcher.utter_message(
+                f"Set size to nearest available: {slot_value}\"")
         return {"tv_size": slot_value}
 
     async def required_slots(
@@ -133,11 +137,12 @@ class ValidateOrderTvForm(FormValidationAction):
         updated_slots -= skippedSlots
         return list(updated_slots)
 
+
 class ValidateCustomSlotMappings(ValidationAction):
 
     @staticmethod
     def setSlotNumericalValue(slotValue):
-        return float(re.findall('[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])        
+        return float(re.findall('[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])
 
     # custom extraction of slot from text
     # async def extract_tv_price(
@@ -171,9 +176,10 @@ class ValidateCustomSlotMappings(ValidationAction):
         size = getValidSize(size)
         return {"tv_size": size}
 
+
 class ActionResetAllSlots(Action):
     def name(self):
         return "action_reset_all_slots"
-    
+
     def run(self, dispatcher, tracker, domain):
         return [AllSlotsReset()]

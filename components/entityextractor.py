@@ -91,11 +91,13 @@ class FuzzyEntityExtractor(GraphComponent, EntityExtractorMixin):
                         })
 
                 if temp_entities:
-                    max_conf_item = max(temp_entities, key=lambda x: x[ENTITY_ATTRIBUTE_CONFIDENCE])
+                    max_conf_item = max(
+                        temp_entities, key=lambda x: x[ENTITY_ATTRIBUTE_CONFIDENCE])
                     print('max conf entity:', val, score)
                     message.set(
                         ENTITIES,
-                        message.get(ENTITIES, []) + [max_conf_item],
+                        message.get(ENTITIES, []) +
+                        self.add_extractor_name([max_conf_item]),
                         add_to_output=True,
                     )
 
