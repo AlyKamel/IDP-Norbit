@@ -43,7 +43,6 @@ rules:
     - requested_slot: null
   - action: action_order_summary
   - action: action_find_product
-  - action: action_reset_all_slots
 
 - rule: Skip form slot
   condition:
@@ -53,6 +52,14 @@ rules:
   - action: utter_skip_slot
   - action: order_tv_form
   - active_loop: order_tv_form
+
+- rule: Show more product results
+  condition:
+  - slot_was_set:
+    - _products
+  steps:
+  - intent: show_more
+  - action: action_show_more
 
 - rule: Stop form
   condition:

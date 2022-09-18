@@ -110,6 +110,13 @@ nlu:
     - it should be [28 inches](tv_size)
     - [55"](tv_size) tv
     - [full hd](tv_type) screen
+- intent: show_more
+  examples: |
+    - show more
+    - show me more products
+    - other results
+    - next page
+    - more results
 - intent: restart
   examples: |
     - restart

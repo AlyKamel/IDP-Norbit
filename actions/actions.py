@@ -6,24 +6,19 @@ from rasa_sdk.types import DomainDict
 from rasa_sdk.forms import ValidationAction
 from rasa_sdk.events import AllSlotsReset
 from scraping.scraper import getValidSize
+from rasa_sdk.events import SlotSet
 
 from scraping.scraper import findProducts
 import re
 
 
 class FindProductAction(Action):
-    BASE_URL = 'https://idealo.de'
-
     def name(self) -> Text:
         return "action_find_product"
-
-    def parseProductText(self, product, shouldLink):
-        return f"<{self.BASE_URL}{product['link']['productLink']['href']}|{product['title']}>" if shouldLink else product["title"]
 
     async def run(
         self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-
         # TODO productscount - 5
 
         brand = tracker.get_slot('tv_brand')
@@ -33,22 +28,110 @@ class FindProductAction(Action):
 
         price_range = (0, price) if price != None else None
         products = findProducts(price_range, brand, size, type)
-        products_count = len(products)
-        if len(products) == 0:
-            dispatcher.utter_message("No suitable products found.")
+        page = 0
+        channel = tracker.get_latest_input_channel()
+        showProducts(dispatcher, products, page, channel)
+        return [SlotSet("_page", page), SlotSet("_products", products)]
+
+
+def showProducts(dispatcher, products, page, channel):
+    def parseProductSection(product):
+        BASE_URL = 'https://idealo.de'
+
+        if product['userRating'] != None:
+            ratingPercent = product['userRating']['percent']
         else:
-            shouldLink = tracker.get_latest_input_channel() == "slack"
-            item_text = ", ".join(
-                self.parseProductText(x, shouldLink)
-                for x in products[:5])
-            more_text = f" and {products_count - 5} more" if products_count > 5 else ""
-            dispatcher.utter_message(
-                f"I can recommend following TVs: {item_text}{more_text}.")
-        return []
+            ratingPercent = 0
+        numStars = round(ratingPercent * 0.05)
+        stars = '\u2605' * round(numStars) + '\u2606' * (5 - numStars)
+
+        return {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*<{BASE_URL}{product['link']['productLink']['href']}|{product['title']}>*\n{stars}\n{product['priceElement']['priceWithCurrency']}"
+            },
+            "accessory": {
+                "type": "image",
+                "image_url": product['image']['httpSrc'],
+                "alt_text": product['title']
+            }
+        }
+
+    def formatSlack(products, remainingCount):
+        divider = {
+            "type": "divider"
+        },
+        output = {
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "I can recommend following items:"
+                    }
+                },
+                *list(map(parseProductSection, products)),
+                {
+                    "type": "actions",
+                    "elements": [
+                        {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "emoji": True,
+                                "text": f"Next {remainingCount} Results"
+                            },
+                            "value": "action_show_more"
+                        }
+                    ]
+                }
+            ]
+        }
+        return output
+
+    first_index = page * 5
+    last_index = (page + 1) * 5
+
+    products_count = len(products)
+    remaining_count = products_count - last_index
+
+    if products_count == 0:
+        dispatcher.utter_message("No suitable products found.")
+    elif channel == "slack":
+        dispatcher.utter_message(json_message=formatSlack(
+            products[first_index:last_index], remaining_count))
+    else:
+        item_text = ", ".join(x["title"]
+                              for x in products[first_index:last_index])
+        more_text = f" and {remaining_count} more" if remaining_count > 0 else ""
+        pretext = "I can recommend following TVs: " if not page else ""
+        dispatcher.utter_message(pretext + item_text + more_text + ".")
 
 
 skippedSlots = set()
 
+
+class ShowMoreAction(Action):
+    def name(self) -> Text:
+        return "action_show_more"
+
+    async def run(
+        self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+        page = tracker.get_slot("_page")
+        products = tracker.get_slot("_products")
+
+        page += 1
+        first_index = page * 5
+
+        if first_index >= len(products):
+            dispatcher.utter_message("No more products to show")
+        else:
+            channel = tracker.get_latest_input_channel()
+            showProducts(dispatcher, products, page, channel)
+            return [SlotSet("_page", page)]
+        return []
 
 class SummarizeOrderAction(Action):
     def name(self) -> Text:
@@ -142,7 +225,7 @@ class ValidateCustomSlotMappings(ValidationAction):
 
     @staticmethod
     def setSlotNumericalValue(slotValue):
-        return float(re.findall('[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])
+        return float(re.findall(r'[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])
 
     # custom extraction of slot from text
     # async def extract_tv_price(
@@ -175,11 +258,3 @@ class ValidateCustomSlotMappings(ValidationAction):
         size = self.setSlotNumericalValue(slot_value)
         size = getValidSize(size)
         return {"tv_size": size}
-
-
-class ActionResetAllSlots(Action):
-    def name(self):
-        return "action_reset_all_slots"
-
-    def run(self, dispatcher, tracker, domain):
-        return [AllSlotsReset()]

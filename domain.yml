@@ -1,13 +1,12 @@
 version: '3.1'
 intents:
-- affirm
 - bot_challenge
 - task_challenge
-- deny
 - goodbye
 - greet
 - inform
 - order_tv
+- show_more
 - restart
 - stop
 - skip
@@ -92,6 +91,14 @@ slots:
     mappings:
     - type: from_entity
       entity: tv_type
+  _products:
+    type: list
+    mappings:
+    - type: custom
+  _page:
+    type: float
+    mappings:
+    - type: custom
 forms:
   order_tv_form:
     required_slots:
@@ -110,6 +117,7 @@ actions:
 - utter_please_rephrase
 - action_hello_world
 - action_find_product
+- action_show_more
 - action_order_summary
 - validate_order_tv_form
 - action_validate_slot_mappings
