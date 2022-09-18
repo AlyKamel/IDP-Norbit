@@ -20,7 +20,7 @@ nlu:
   examples: |
     - cu
     - good by
-    - cee you later
+    - c you later
     - good night
     - bye
     - goodbye
@@ -28,24 +28,19 @@ nlu:
     - see you around
     - bye bye
     - see you later
-- intent: affirm
+    - i need to go now
+    - adios
+    - till later
+    - im leaving now
+- intent: thank
   examples: |
-    - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
-    - correct
-    - yes stop
-- intent: deny
-  examples: |
-    - no
-    - n
-    - never
-    - I don't think so
-    - don't like that
-    - no way
-    - not really
+    - thank you
+    - appreciate the help
+    - thank you for all your help!
+    - thanks
+    - thnx
+    - thanks a lot!
+    - you are awesome
 - intent: bot_challenge
   examples: |
     - are you a bot?
@@ -123,6 +118,8 @@ nlu:
     - reset
     - start again
     - cancel
+    - start over
+    - new search
 - intent: stop
   examples: |
     - stop

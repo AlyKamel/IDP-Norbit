@@ -4,6 +4,7 @@ intents:
 - task_challenge
 - goodbye
 - greet
+- thank
 - inform
 - order_tv
 - show_more
@@ -43,13 +44,13 @@ responses:
             type: plain_text
             text: "Select price range:"
           options:
-            - value: "500$"
+            - value: "500€"
               text:
-                text: "up to 500$"
+                text: "up to 500€"
                 type: plain_text
-            - value: "1000$"
+            - value: "1000€"
               text:
-                text: "up to 1000$"
+                text: "up to 1000€"
                 type: plain_text
     channel: "slack"
   - text: What price?
@@ -65,6 +66,10 @@ responses:
   - text: Ended the form. What else could I assist you with?
   utter_task_description:
   - text: I can help you look for a TV that suits your needs based on the brand you want, the price you are willing to pay (in €), the screen size (in inches) and features you would like your TV to have.
+  utter_welcome:
+  - text: You're welcome!
+  - text: Glad to help!
+  - text: Anytime :)
 entities:
 - tv_brand
 - tv_price
@@ -115,6 +120,7 @@ actions:
 - utter_goodbye
 - utter_greet
 - utter_please_rephrase
+- utter_welcome
 - action_hello_world
 - action_find_product
 - action_show_more
