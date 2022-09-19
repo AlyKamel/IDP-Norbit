@@ -40,10 +40,10 @@ def showProducts(dispatcher, products, page, channel):
 
         if product['userRating'] != None:
             ratingPercent = product['userRating']['percent']
+            numStars = round(ratingPercent * 0.05)
+            stars = '\u2605' * round(numStars) + '\u2606' * (5 - numStars)
         else:
-            ratingPercent = 0
-        numStars = round(ratingPercent * 0.05)
-        stars = '\u2605' * round(numStars) + '\u2606' * (5 - numStars)
+            stars = ""
 
         return {
             "type": "section",
@@ -58,21 +58,25 @@ def showProducts(dispatcher, products, page, channel):
             }
         }
 
-    def formatSlack(products, remainingCount):
-        divider = {
-            "type": "divider"
-        },
-        output = {
-            "blocks": [
-                {
-                    "type": "section",
-                    "text": {
+    def formatSlack(products, remainingCount, isFirstPage):
+        blocks = []
+
+        if isFirstPage:
+            blocks.append({
+                "type": "section",
+                "text": {
                         "type": "mrkdwn",
                         "text": "I can recommend following items:"
-                    }
-                },
-                *list(map(parseProductSection, products)),
-                {
+                }
+            })
+
+        blocks.append({"type": "divider"})
+        for p in products:
+            blocks.append(parseProductSection(p))
+            blocks.append({ "type": "divider" })
+
+        if remainingCount > 0:
+            blocks.append({
                     "type": "actions",
                     "elements": [
                         {
@@ -80,15 +84,14 @@ def showProducts(dispatcher, products, page, channel):
                             "text": {
                                 "type": "plain_text",
                                 "emoji": True,
-                                "text": f"Next {remainingCount} Results"
+                                "text": f"Show more results ({remainingCount})"
                             },
                             "value": "action_show_more"
                         }
                     ]
-                }
-            ]
-        }
-        return output
+                })
+
+        return {"blocks": blocks}
 
     first_index = page * 5
     last_index = (page + 1) * 5
@@ -96,11 +99,11 @@ def showProducts(dispatcher, products, page, channel):
     products_count = len(products)
     remaining_count = products_count - last_index
 
-    if products_count == 0:
+    if not products_count:
         dispatcher.utter_message("No suitable products found.")
     elif channel == "slack":
         dispatcher.utter_message(json_message=formatSlack(
-            products[first_index:last_index], remaining_count))
+            products[first_index:last_index], remaining_count, page == 0))
     else:
         item_text = ", ".join(x["title"]
                               for x in products[first_index:last_index])
