@@ -1,14 +1,11 @@
 from __future__ import annotations
 import logging
-import re
 from typing import Any, Dict, List, Optional, Text
 
 from rasa.engine.graph import GraphComponent, ExecutionContext
 from rasa.engine.recipes.default_recipe import DefaultV1Recipe
 from rasa.engine.storage.storage import ModelStorage
 from rasa.engine.storage.resource import Resource
-import rasa.shared.utils.io
-import rasa.nlu.utils.pattern_utils as pattern_utils
 from rasa.shared.nlu.training_data.training_data import TrainingData
 from rasa.shared.nlu.training_data.message import Message
 from rasa.shared.nlu.constants import (

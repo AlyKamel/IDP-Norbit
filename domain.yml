@@ -1,130 +1,231 @@
-version: '3.1'
+version: "3.1"
 intents:
-- bot_challenge
-- task_challenge
-- goodbye
-- greet
-- thank
-- inform
-- order_tv
-- show_more
-- restart
-- stop
-- skip
+  - bot_challenge
+  - task_challenge
+  - goodbye
+  - greet
+  - thank
+  - inform
+  - order_tv
+  - show_more
+  - restart
+  - stop
+  - skip
 responses:
   utter_greet:
-  - text: Hey!
-  - text: Hello!
-  - text: Hi!
-  utter_did_that_help:
-  - text: Did that help you?
+    - text: Hey!
+    - text: Hello!
+    - text: Hi!
   utter_goodbye:
-  - text: Bye
+    - text: See you soon!
+    - text: Bye-bye!
+    - text: Till next time!
+    - text: Bye
   utter_iamabot:
-  - text: I am a bot, powered by Rasa.
-    image: "https://st3.depositphotos.com/8950810/17657/v/380/depositphotos_176577870-stock-illustration-cute-smiling-funny-robot-chat.jpg?forcejpeg=true"
+    - text: I am a bot, powered by Rasa.
+      image: "https://st3.depositphotos.com/8950810/17657/v/380/depositphotos_176577870-stock-illustration-cute-smiling-funny-robot-chat.jpg?forcejpeg=true"
+    - text: Think of me as a virtual agent.
   utter_please_rephrase:
-  - text: I'm sorry, I didn't quite understand that. Could you rephrase?
+    - text: I'm sorry, I didn't quite understand that. Could you rephrase?
   utter_default:
-  - text: I'm sorry, I didn't quite understand that. Could you rephrase?
-  utter_confirm_tv:
-  - text: Ok, a TV
+    - text: I'm sorry, I didn't quite understand that. Could you rephrase?
+    - text: Sorry, I don't understand what you are saying.
   utter_ask_order_tv_form_tv_brand:
-  - text: What brand?
+    - custom:
+        blocks:
+          - type: section
+            text:
+              text: "Choose a brand:"
+              type: plain_text
+            accessory:
+              type: static_select
+              placeholder:
+                type: plain_text
+                text: "Popular brands:"
+              options:
+                - value: "Samsung"
+                  text:
+                    text: "Samsung"
+                    type: plain_text
+                - value: "LG"
+                  text:
+                    text: "LG"
+                    type: plain_text
+                - value: "Philips"
+                  text:
+                    text: "Philips"
+                    type: plain_text
+                - value: "Panasonic"
+                  text:
+                    text: "Panasonic"
+                    type: plain_text
+                - value: "skip"
+                  text:
+                    text: "Doesn't matter"
+                    type: plain_text
+      channel: "slack"
+    - text: Which brand do you prefer?
   utter_ask_order_tv_form_tv_price:
-  - custom: 
-      blocks:
-      - type: section
-        text:
-          text: "Choose the price range:"
-          type: plain_text
-        accessory:
-          type: static_select
-          placeholder:
-            type: plain_text
-            text: "Select price range:"
-          options:
-            - value: "500€"
-              text:
-                text: "up to 500€"
+    - custom:
+        blocks:
+          - type: section
+            text:
+              text: "What is the maximum price you are willing to pay?"
+              type: plain_text
+            accessory:
+              type: static_select
+              placeholder:
                 type: plain_text
-            - value: "1000€"
-              text:
-                text: "up to 1000€"
-                type: plain_text
-    channel: "slack"
-  - text: What price?
+                text: "Select max price:"
+              options:
+                - value: "500€"
+                  text:
+                    text: "up to 500€"
+                    type: plain_text
+                - value: "1000€"
+                  text:
+                    text: "up to 1000€"
+                    type: plain_text
+                - value: "2000€"
+                  text:
+                    text: "up to 2000€"
+                    type: plain_text
+                - value: "skip"
+                  text:
+                    text: "No upper limit"
+                    type: plain_text
+      channel: "slack"
+    - text: What is the maximum price you are willing to pay?
   utter_ask_order_tv_form_tv_size:
-  - text: What screen size?
+    - custom:
+        blocks:
+          - type: section
+            text:
+              text: "Choose screen size:"
+              type: plain_text
+            accessory:
+              type: static_select
+              placeholder:
+                type: plain_text
+                text: "Popular sizes:"
+              options:
+                - value: '65"'
+                  text:
+                    text: '65"'
+                    type: plain_text
+                - value: '55"'
+                  text:
+                    text: '55"'
+                    type: plain_text
+                - value: '43"'
+                  text:
+                    text: '43"'
+                    type: plain_text
+                - value: '50"'
+                  text:
+                    text: '50"'
+                    type: plain_text
+                - value: "skip"
+                  text:
+                    text: "Doesn't matter"
+                    type: plain_text
+      channel: "slack"
+    - text: What size should the screen be?
   utter_ask_order_tv_form_tv_type:
-  - text: What type?
+    - custom:
+        blocks:
+          - type: section
+            text:
+              text: "Choose TV type:"
+              type: plain_text
+            accessory:
+              type: static_select
+              placeholder:
+                type: plain_text
+                text: "Popular types:"
+              options:
+                - value: "4K"
+                  text:
+                    text: "4K"
+                    type: plain_text
+                - value: "Full HD"
+                  text:
+                    text: "Full HD"
+                    type: plain_text
+                - value: "HD Ready"
+                  text:
+                    text: "HD Ready"
+                    type: plain_text
+                - value: "3D"
+                  text:
+                    text: "3D"
+                    type: plain_text
+                - value: "skip"
+                  text:
+                    text: "Doesn't matter"
+                    type: plain_text
+      channel: "slack"
+    - text: What type of TV are you looking for?
   utter_skip_slot:
-  - text: Ok. Will skip this question.
+    - text: Ok. Will skip this question.
   utter_restart:
-  - text: Ok. Chat history has been reset.
+    - text: Ok. Chat history has been reset.
   utter_end_form:
-  - text: Ended the form. What else could I assist you with?
+    - text: Ended the form. What else could I assist you with?
   utter_task_description:
-  - text: I can help you look for a TV that suits your needs based on the brand you want, the price you are willing to pay (in €), the screen size (in inches) and features you would like your TV to have.
+    - text: I can help you look for a TV that suits your needs. Enter the brand you want, the price you are willing to pay (in €), the screen size (in inches) and TV type you would like to have.
   utter_welcome:
-  - text: You're welcome!
-  - text: Glad to help!
-  - text: Anytime :)
+    - text: You're welcome!
+    - text: Glad to help!
+    - text: Anytime :)
+    - text: Anytime. That's what I'm here for.
+    - text: It's my pleasure to help.
 entities:
-- tv_brand
-- tv_price
-- tv_size
-- tv_type
+  - tv_brand
+  - tv_price
+  - tv_size
+  - tv_type
 slots:
   tv_brand:
     type: text
     mappings:
-    - type: from_entity
-      entity: tv_brand
+      - type: from_entity
+        entity: tv_brand
   tv_price:
     type: text
     mappings:
-    - type: from_entity
-      entity: tv_price
+      - type: from_entity
+        entity: tv_price
   tv_size:
     type: text
     mappings:
-    - type: from_entity
-      entity: tv_size
+      - type: from_entity
+        entity: tv_size
   tv_type:
     type: text
     mappings:
-    - type: from_entity
-      entity: tv_type
+      - type: from_entity
+        entity: tv_type
   _products:
     type: list
     mappings:
-    - type: custom
+      - type: custom
   _page:
     type: float
     mappings:
-    - type: custom
+      - type: custom
 forms:
   order_tv_form:
     required_slots:
-    - tv_brand
-    - tv_price
-    - tv_size
-    - tv_type
+      - tv_brand
+      - tv_price
+      - tv_size
+      - tv_type
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 actions:
-- utter_task_description
-- utter_end_form
-- utter_goodbye
-- utter_greet
-- utter_please_rephrase
-- utter_welcome
-- action_hello_world
-- action_find_product
-- action_show_more
-- action_order_summary
-- validate_order_tv_form
-- action_validate_slot_mappings
-- action_reset_all_slots
+  - action_find_product
+  - action_show_more
+  - action_order_summary
+  - validate_order_tv_form

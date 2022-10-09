@@ -194,7 +194,7 @@ class ValidateOrderTvForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         if tracker.active_loop:
-            dispatcher.utter_message("Set price to " + str(slot_value) + "€")
+            dispatcher.utter_message("Set max price to " + str(slot_value) + "€")
         return {"tv_price": slot_value}
 
     def validate_tv_size(
@@ -229,17 +229,6 @@ class ValidateCustomSlotMappings(ValidationAction):
     @staticmethod
     def setSlotNumericalValue(slotValue):
         return float(re.findall(r'[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])
-
-    # custom extraction of slot from text
-    # async def extract_tv_price(
-    #     self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
-    # ) -> Dict[Text, Any]:
-    #     intent_of_last_user_message = tracker.get_intent_of_latest_message()
-    #     print(intent_of_last_user_message)
-    #     print("price", tracker.get_slot("tv_price"))
-    #     if intent_of_last_user_message == "inform" or intent_of_last_user_message == "order_tv":
-    #         return {"tv_price":  self.setSlotNumericalValue(tracker, "tv_price")}
-    #     return {}
 
     def validate_tv_price(
         self,

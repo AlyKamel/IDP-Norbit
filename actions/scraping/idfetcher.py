@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-from util.util import fetchJSON
+from .util import fetchJSON
 
 def getFilter(filters, name):
     att = next(x for x in filters if x["title"] == name)['remainingItems']
@@ -25,7 +25,7 @@ def storeProductIds():
     brands = getFilter(filters, "Hersteller")
     sizes = getFilter(filters, "Bildschirmgröße")
     types = getFilter(filters, "Produkttyp")
-    types = {k.replace("-", " ").replace("Fernseher", "").strip(): v for k, v in types.items()}
+    types = {k.replace("-", " ").replace("Fernseher", "").replace("TV", "").strip(): v for k, v in types.items()}
 
     output_file = Path(__file__).parent / 'data'
     output_file.mkdir(exist_ok=True, parents=True)
