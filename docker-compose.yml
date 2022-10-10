@@ -1,0 +1,24 @@
+version: '3.0'
+services:
+  rasa_bot:
+    container_name: rasa_bot
+    build: 
+      context: .
+    volumes:
+      - ./:/app
+    ports: 
+      - ${RASA_BOT_PORT}:${RASA_BOT_PORT}
+    env_file:
+    - .env
+
+  action_server:
+    container_name: action_server
+    build: 
+      context: actions
+    volumes:
+      - ./actions:/app/actions
+      - ./data:/app/data
+    ports:
+      - ${ACTION_SERVER_PORT}:${ACTION_SERVER_PORT}
+    env_file:
+    - .env

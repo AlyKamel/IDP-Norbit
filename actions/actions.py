@@ -5,10 +5,10 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.forms import ValidationAction
 from rasa_sdk.events import AllSlotsReset
-from scraping.scraper import getValidSize
+from .scraping.scraper import getValidSize
 from rasa_sdk.events import SlotSet
 
-from scraping.scraper import findProducts
+from .scraping.scraper import findProducts
 import re
 
 
@@ -19,8 +19,6 @@ class FindProductAction(Action):
     async def run(
         self, dispatcher, tracker: Tracker, domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        # TODO productscount - 5
-
         brand = tracker.get_slot('tv_brand')
         price = tracker.get_slot('tv_price')
         size = tracker.get_slot('tv_size')
