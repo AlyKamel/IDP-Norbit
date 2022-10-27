@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class FuzzyEntityExtractor(GraphComponent, EntityExtractorMixin):
     ENTITY = "tv_brand"
     LOOKUP_PATH = f"data/lookup/{ENTITY}.txt"
-    threshold_score = 70
+    threshold_score = 80
 
     @staticmethod
     def get_default_config() -> Dict[Text, Any]:

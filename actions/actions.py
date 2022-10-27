@@ -71,12 +71,12 @@ def showProducts(dispatcher, products, page, channel):
         blocks.append({"type": "divider"})
         for p in products:
             blocks.append(parseProductSection(p))
-            blocks.append({ "type": "divider" })
+            blocks.append({"type": "divider"})
 
         if remainingCount > 0:
             blocks.append({
-                    "type": "actions",
-                    "elements": [
+                "type": "actions",
+                "elements": [
                         {
                             "type": "button",
                             "text": {
@@ -86,8 +86,8 @@ def showProducts(dispatcher, products, page, channel):
                             },
                             "value": "action_show_more"
                         }
-                    ]
-                })
+                ]
+            })
 
         return {"blocks": blocks}
 
@@ -134,6 +134,7 @@ class ShowMoreAction(Action):
             return [SlotSet("_page", page)]
         return []
 
+
 class SummarizeOrderAction(Action):
     def name(self) -> Text:
         return "action_order_summary"
@@ -162,6 +163,12 @@ class ValidateOrderTvForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_order_tv_form"
 
+    @staticmethod
+    def setSlotNumericalValue(slotValue):
+        if isinstance(slotValue, (int, float)):
+            return slotValue
+        return float(re.findall(r'[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])
+
     def validate_tv_brand(
         self,
         slot_value: Any,
@@ -180,6 +187,7 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        slot_value = slot_value.title()
         if tracker.active_loop:
             dispatcher.utter_message("Set type to " + slot_value)
         return {"tv_type": slot_value}
@@ -191,9 +199,10 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        price = self.setSlotNumericalValue(slot_value)
         if tracker.active_loop:
-            dispatcher.utter_message("Set max price to " + str(slot_value) + "€")
-        return {"tv_price": slot_value}
+            dispatcher.utter_message("Set max price to " + str(price) + "€")
+        return {"tv_price": price}
 
     def validate_tv_size(
         self,
@@ -202,10 +211,12 @@ class ValidateOrderTvForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        size = self.setSlotNumericalValue(slot_value)
+        size = getValidSize(size)
         if tracker.active_loop:
             dispatcher.utter_message(
-                f"Set size to nearest available: {slot_value}\"")
-        return {"tv_size": slot_value}
+                f"Set size to nearest available: {size}\"")
+        return {"tv_size": size}
 
     async def required_slots(
         self,
@@ -220,31 +231,3 @@ class ValidateOrderTvForm(FormValidationAction):
             skippedSlots.add(slot)
         updated_slots -= skippedSlots
         return list(updated_slots)
-
-
-class ValidateCustomSlotMappings(ValidationAction):
-
-    @staticmethod
-    def setSlotNumericalValue(slotValue):
-        return float(re.findall(r'[0-9]+(?:\.[0-9]{1,2})?', slotValue)[0])
-
-    def validate_tv_price(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        price = self.setSlotNumericalValue(slot_value)
-        return {"tv_price": price}
-
-    def validate_tv_size(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        size = self.setSlotNumericalValue(slot_value)
-        size = getValidSize(size)
-        return {"tv_size": size}

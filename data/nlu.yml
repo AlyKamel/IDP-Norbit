@@ -19,6 +19,7 @@ nlu:
       - howdy
       - greetings
       - hola
+      - good day
   - intent: goodbye
     examples: |
       - cu
@@ -43,6 +44,7 @@ nlu:
       - you can go now
       - goodnight
       - it's bed time
+      - ciao
   - intent: thank
     examples: |
       - thank you
@@ -74,6 +76,10 @@ nlu:
       - you're a robot
       - Where are you from?
       - are you a real human?
+      - what is your name?
+      - what should i call you?
+      - do you have a name
+      - what are you
   - intent: task_challenge
     examples: |
       - what can you do?
@@ -156,6 +162,8 @@ nlu:
       - stop
       - cancel
       - end
+      - shut up
+      - quit
   - intent: skip
     examples: |
       - skip
@@ -166,6 +174,10 @@ nlu:
       - anything is fine
       - next
       - skip this question
+      - dont really care about that
+      - doesnt matter
+      - who cares
+      - all is the same for me
   - regex: tv_price
     examples: |
       - \d{1,4}(\.\d{1,2})?\s*(€|eur|euro|euros)

@@ -22,9 +22,8 @@ responses:
     - text: Till next time!
     - text: Bye
   utter_iamabot:
-    - text: I am a bot, powered by Rasa.
-      image: "https://st3.depositphotos.com/8950810/17657/v/380/depositphotos_176577870-stock-illustration-cute-smiling-funny-robot-chat.jpg?forcejpeg=true"
-    - text: Think of me as a virtual agent.
+    - text: I am Norbit, a bot powered by Rasa.
+    - text: My name is Norbit. Think of me as your virtual agent, here to help you!
   utter_please_rephrase:
     - text: I'm sorry, I didn't quite understand that. Could you rephrase?
   utter_default:
