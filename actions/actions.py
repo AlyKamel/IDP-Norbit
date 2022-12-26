@@ -64,7 +64,7 @@ def showProducts(dispatcher, products, page, channel):
                 "type": "section",
                 "text": {
                         "type": "mrkdwn",
-                        "text": "I can recommend following items:"
+                        "text": "I can recommend following TVs:"
                 }
             })
 
