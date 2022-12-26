@@ -1,5 +1,10 @@
 # Norbit
 
+<p align="center" width="100%">
+<img src="https://user-images.githubusercontent.com/51837134/209583817-2eab01fe-77f1-45d1-9fc5-5a3d0a77d5e1.png" alt="Norbit avatar" width="180"/>
+</p>
+
+
 A Rasa-based chatbot with the mission to assist customers to find various electronic products based on their criteria. Norbit is able to communicate with users by recognizing predefined entities and intents and responding to them according to specified rules.
 
 ## Run the bot
